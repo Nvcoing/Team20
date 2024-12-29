@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-	// The position of the camera should be the same as the car's position
-	[SerializeField] GameObject thingToFollow;
+    [SerializeField] GameObject thingToFollow; 
 
-	// Update is called once per frame
-	void LateUpdate()
-	{
-		transform.position = thingToFollow.transform.position + new Vector3 (0,0,-10);
-	}
+    void LateUpdate()
+    {
+       
+        Vector3 newPosition = thingToFollow.transform.position + new Vector3(0, 0, -10);
+        transform.position = newPosition;
+
+       
+        transform.rotation = Quaternion.identity;
+    }
 }
