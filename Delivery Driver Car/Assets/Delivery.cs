@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,17 +12,16 @@ public class Delivery : MonoBehaviour
 
     private bool gotPackage = false;
 
-    private Transform currentPackage; 
-    private Transform currentCustomer; 
+    private Transform currentPackage;
+    private Transform currentCustomer;
+
+    private PauseMenuController pauseMenuController; // Tham chiếu đến PauseMenuController
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        FindNextPackage(); 
-    }
-
-    void OnCollisionEnter2D(Collision2D other)
-    {
-        Debug.Log("Ouch! Collision.");
+        pauseMenuController = FindObjectOfType<PauseMenuController>(); // Tìm PauseMenuController trong scene
+        FindNextPackage();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,11 +32,9 @@ public class Delivery : MonoBehaviour
             gotPackage = true;
             spriteRenderer.color = hasPackageColor;
 
-            
             currentPackage = other.transform;
             Destroy(other.gameObject, destroyDelay);
 
-           
             FindNextCustomer();
         }
         else if (gotPackage && other.tag == "Customer")
@@ -46,10 +43,12 @@ public class Delivery : MonoBehaviour
             gotPackage = false;
             spriteRenderer.color = noPackageColor;
 
-            
-            currentCustomer = null;
+            if (pauseMenuController != null)
+            {
+                pauseMenuController.AddCoins(50); // Cộng 50 coin khi giao hàng thành công
+            }
 
-            
+            currentCustomer = null;
             FindNextPackage();
         }
     }
@@ -65,7 +64,7 @@ public class Delivery : MonoBehaviour
 
             if (pointer != null)
             {
-                pointer.SetTarget(currentPackage); 
+                pointer.SetTarget(currentPackage);
             }
             else
             {
@@ -78,12 +77,10 @@ public class Delivery : MonoBehaviour
             Pointer pointer = FindObjectOfType<Pointer>();
             if (pointer != null)
             {
-                pointer.SetTarget(null); 
+                pointer.SetTarget(null);
             }
         }
     }
-
-
 
     void FindNextCustomer()
     {
@@ -96,7 +93,7 @@ public class Delivery : MonoBehaviour
 
             if (pointer != null)
             {
-                pointer.SetTarget(currentCustomer); 
+                pointer.SetTarget(currentCustomer);
             }
             else
             {
@@ -109,9 +106,8 @@ public class Delivery : MonoBehaviour
             Pointer pointer = FindObjectOfType<Pointer>();
             if (pointer != null)
             {
-                pointer.SetTarget(null); 
+                pointer.SetTarget(null);
             }
         }
     }
-
 }

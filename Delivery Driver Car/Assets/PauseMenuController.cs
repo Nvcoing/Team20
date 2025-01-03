@@ -12,28 +12,33 @@ public class PauseMenuController : MonoBehaviour
     private float timer;
 
     [SerializeField] private TextMeshProUGUI countdownText;
+    [SerializeField] private TextMeshProUGUI coinText; // Hiển thị số coin
+
+    public int currentCoins = 0; // Số coin hiện tại
+    public int winConditionCoins = 1000; // Điều kiện thắng
 
     void Start()
     {
         timer = countdownTime; // Đặt thời gian bắt đầu là 5 phút
         UpdateCountdownText(); // Hiển thị giá trị ban đầu (5:00)
+        UpdateCoinText(); // Hiển thị số coin ban đầu
     }
 
     void Update()
     {
-        // Đếm ngược thời gian (dùng unscaledDeltaTime để không phụ thuộc vào Time.timeScale)
+        // Đếm ngược thời gian
         if (!isPaused)
         {
-            timer -= Time.unscaledDeltaTime; // Sử dụng unscaledDeltaTime để đảm bảo đếm ngược
+            timer -= Time.unscaledDeltaTime;
             if (timer <= 0)
             {
                 timer = 0; // Đảm bảo không xuống dưới 0
-                LoadNextScene(); // Hết giờ, chuyển sang scene khác
+                CheckGameEnd(); // Kiểm tra điều kiện kết thúc game
             }
-            UpdateCountdownText(); // Cập nhật TMP Text hiển thị
+            UpdateCountdownText();
         }
 
-        // Kiểm tra nhấn phím Escape để bật/tắt menu tạm dừng
+        // Bật/tắt menu tạm dừng
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
@@ -45,6 +50,29 @@ public class PauseMenuController : MonoBehaviour
                 PauseGame();
             }
         }
+    }
+
+    public void AddCoins(int amount)
+    {
+        currentCoins += amount;
+        UpdateCoinText();
+    }
+
+    private void CheckGameEnd()
+    {
+        if (currentCoins >= winConditionCoins)
+        {
+            SceneManager.LoadScene("Win"); // Chuyển sang scene Win nếu đạt đủ coin
+        }
+        else
+        {
+            SceneManager.LoadScene("Lost"); // Chuyển sang scene Lost nếu không đủ coin
+        }
+    }
+
+    private void UpdateCoinText()
+    {
+        coinText.text = "Coins: " + currentCoins;
     }
 
     public void ResumeGame()
@@ -67,16 +95,10 @@ public class PauseMenuController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void LoadNextScene()
-    {
-        Time.timeScale = 1f; // Đảm bảo thời gian bình thường khi chuyển scene
-        SceneManager.LoadScene("Lost"); // Thay "Lost" bằng tên scene bạn muốn chuyển đến
-    }
-
     private void UpdateCountdownText()
     {
-        int minutes = Mathf.FloorToInt(timer / 60); // Tính số phút
-        int seconds = Mathf.FloorToInt(timer % 60); // Tính số giây
-        countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds); // Hiển thị dạng MM:SS
+        int minutes = Mathf.FloorToInt(timer / 60);
+        int seconds = Mathf.FloorToInt(timer % 60);
+        countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }
