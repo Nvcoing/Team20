@@ -16708,7 +16708,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4a9aee11143ea4bb6059621902cf6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 279237990}
+  player: {fileID: 1578403323}
+  distanceFromPlayer: 5
 --- !u!212 &1304684586
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -16758,7 +16760,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5.12, y: 2.82}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
