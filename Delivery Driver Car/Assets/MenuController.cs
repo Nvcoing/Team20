@@ -12,7 +12,7 @@ public class MenuController : MonoBehaviour
         isButtonClicked = true;     
 
         Debug.Log("Start Game Button Pressed");
-        SceneManager.LoadScene("GamePlay");
+        SceneManager.LoadScene("StoreCar");
     }
 
     

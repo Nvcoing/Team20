@@ -72,7 +72,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void UpdateCoinText()
     {
-        coinText.text = "Coins: " + currentCoins;
+        coinText.text = "" +currentCoins;
     }
 
     public void ResumeGame()
