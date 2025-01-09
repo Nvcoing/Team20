@@ -24,6 +24,10 @@ public class MenuController : MonoBehaviour
         Debug.Log("Quit Game Button Pressed");
         Application.Quit();
     }
+    public void Menu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
     void Update()
     {
         
@@ -32,5 +36,9 @@ public class MenuController : MonoBehaviour
            
             SceneManager.LoadScene("Menu");  
         }
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("StoreCar");
     }
 }
