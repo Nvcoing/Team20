@@ -39,6 +39,6 @@ public class MenuController : MonoBehaviour
     //}
     public void RestartGame()
     {
-        SceneManager.LoadScene("StoreCar");
+        SceneManager.LoadScene("GamePlay");
     }
 }

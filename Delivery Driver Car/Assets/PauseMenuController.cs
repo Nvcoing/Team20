@@ -13,7 +13,7 @@ public class PauseMenuController : MonoBehaviour
     private float timer;
 
     [SerializeField] private TextMeshProUGUI countdownText;
-    [SerializeField] private TextMeshProUGUI coinText; // Hiển thị số coin
+    [SerializeField] private TextMeshProUGUI coinText, coinText1; // Hiển thị số coin
 
     public int currentCoins = 0; // Số coin hiện tại
     public int winConditionCoins = 1000; // Điều kiện thắng
@@ -85,6 +85,7 @@ public class PauseMenuController : MonoBehaviour
     private void UpdateCoinText()
     {
         coinText.text = "" + currentCoins;
+        coinText1.text = "" + currentCoins;
     }
 
     public void ResumeGame()
