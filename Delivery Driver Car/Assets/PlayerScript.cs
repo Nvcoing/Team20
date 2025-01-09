@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
+//using static Unity.Burst.Intrinsics.X86.Avx;
+//using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerScript : MonoBehaviour
 {

@@ -5,6 +5,7 @@ using TMPro;
 public class PauseMenuController : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject storeMenuUI; // Menu store khi nhấn B
 
     private bool isPaused = false;
 
@@ -50,6 +51,17 @@ public class PauseMenuController : MonoBehaviour
                 PauseGame();
             }
         }
+        else if (Input.GetKeyDown(KeyCode.B)) // Mở menu store khi nhấn B
+        {
+            if (storeMenuUI.activeSelf) // Nếu menu store đang mở, đóng lại
+            {
+                ResumeGame();
+            }
+            else
+            {
+                OpenStoreMenu(); // Mở menu store
+            }
+        }
     }
 
     public void AddCoins(int amount)
@@ -72,12 +84,13 @@ public class PauseMenuController : MonoBehaviour
 
     private void UpdateCoinText()
     {
-        coinText.text = "" +currentCoins;
+        coinText.text = "" + currentCoins;
     }
 
     public void ResumeGame()
     {
         pauseMenuUI.SetActive(false);
+        storeMenuUI.SetActive(false); // Đảm bảo đóng menu store khi resume
         Time.timeScale = 1f;
         isPaused = false;
     }
@@ -87,6 +100,12 @@ public class PauseMenuController : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+    }
+
+    private void OpenStoreMenu()
+    {
+        storeMenuUI.SetActive(true);
+        Time.timeScale = 0f; // Dừng thời gian khi mở menu store
     }
 
     public void RestartGame()
