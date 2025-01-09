@@ -87,6 +87,22 @@ public class PauseMenuController : MonoBehaviour
         coinText.text = "" + currentCoins;
         coinText1.text = "" + currentCoins;
     }
+    // Ham thanh toan xe
+    public bool SpeedCar(int price)
+    {
+        if (currentCoins >= price)
+        {
+            currentCoins -= price;
+            Debug.Log("Mua xe thanh cong!");
+            UpdateCoinText();
+            return true;
+        }
+        else
+        {
+            Debug.Log("Khong du tien!");
+            return false;
+        }
+    }
 
     public void ResumeGame()
     {

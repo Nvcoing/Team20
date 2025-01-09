@@ -1239,7 +1239,6 @@ MonoBehaviour:
   - Normal Speed
   - High Speed
   carPrices: 000000002c01000058020000
-  backButton: {fileID: 726146443}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

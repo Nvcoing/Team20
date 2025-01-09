@@ -9,12 +9,12 @@ public class CarInfor : MonoBehaviour
     public Button btnBuy;
     private int price;
 
-    public static PlayerScript player;
+    public static PauseMenuController player;
     void Start()
     {
         if (player == null)
         {
-            player = FindObjectOfType<PlayerScript>();
+            player = FindObjectOfType<PauseMenuController>();
         }
     }
 
