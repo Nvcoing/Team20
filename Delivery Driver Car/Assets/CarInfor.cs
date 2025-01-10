@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 public class CarInfor : MonoBehaviour
 {
     public Image carImage;
@@ -8,8 +9,9 @@ public class CarInfor : MonoBehaviour
     public TMP_Text carPrice;
     public Button btnBuy;
     private int price;
-    private Sprite carSprite; // Thêm biến lưu sprite xe
-    private Driver playerDriver; // Tham chiếu đến Driver component
+    private Sprite carSprite;
+    private Driver playerDriver;
+    public static int currentScoreMultiplier = 1; // Thêm biến static để lưu hệ số điểm
 
     public static PauseMenuController player;
 
@@ -19,22 +21,18 @@ public class CarInfor : MonoBehaviour
         {
             player = FindObjectOfType<PauseMenuController>();
         }
-
-        // Tìm Driver component
         playerDriver = FindObjectOfType<Driver>();
     }
 
-    // Xu ly gan thong tin cho xe
     public void setCar(Sprite image, string quality, int price)
     {
         carImage.sprite = image;
-        carSprite = image; // Lưu sprite để sử dụng sau
+        carSprite = image;
         qualityCar.text = quality;
         this.price = price;
         carPrice.text = this.price.ToString();
     }
 
-    // Xu ly mua xe
     public void OnBtnBuyClicked()
     {
         if (player.SpeedCar(price))
@@ -42,13 +40,16 @@ public class CarInfor : MonoBehaviour
             btnBuy.interactable = false;
             carPrice.text = "Purchased!";
 
-            // Thay đổi sprite của xe người chơi
             if (playerDriver != null)
             {
                 SpriteRenderer playerSprite = playerDriver.GetComponent<SpriteRenderer>();
                 if (playerSprite != null)
                 {
                     playerSprite.sprite = carSprite;
+                    // Set hệ số điểm dựa vào giá xe
+                    if (price <= 100) currentScoreMultiplier = 2;
+                    else if (price <= 300) currentScoreMultiplier = 3;
+                    else currentScoreMultiplier = 5;
                 }
             }
         }

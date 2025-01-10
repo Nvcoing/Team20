@@ -31,10 +31,8 @@ public class Delivery : MonoBehaviour
             Debug.Log("Package Picked up!");
             gotPackage = true;
             spriteRenderer.color = hasPackageColor;
-
             currentPackage = other.transform;
             Destroy(other.gameObject, destroyDelay);
-
             FindNextCustomer();
         }
         else if (gotPackage && other.tag == "Customer")
@@ -45,7 +43,8 @@ public class Delivery : MonoBehaviour
 
             if (pauseMenuController != null)
             {
-                pauseMenuController.AddCoins(50,10); // Cộng 50 coin khi giao hàng thành công
+                // Sử dụng hệ số điểm từ CarInfor
+                pauseMenuController.AddCoins(50, 10 * CarInfor.currentScoreMultiplier);
             }
 
             currentCustomer = null;

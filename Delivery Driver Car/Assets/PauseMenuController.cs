@@ -75,7 +75,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void CheckGameEnd()
     {
-        if (currentCoins >= winConditionCoins)
+        if (currentScore >= winConditionCoins)
         {
             SceneManager.LoadScene("Win"); // Chuyển sang scene Win nếu đạt đủ coin
         }
