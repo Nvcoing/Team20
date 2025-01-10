@@ -14,8 +14,9 @@ public class PauseMenuController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private TextMeshProUGUI coinText, coinText1; // Hiển thị số coin
-
+    [SerializeField] private TextMeshProUGUI scoreText; // Hiển thị số coin
     public int currentCoins = 0; // Số coin hiện tại
+    public int currentScore = 0; // Số coin hiện tại
     public int winConditionCoins = 1000; // Điều kiện thắng
 
     void Start()
@@ -64,10 +65,12 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
-    public void AddCoins(int amount)
+    public void AddCoins(int amount,int score)
     {
         currentCoins += amount;
+        currentScore += score;
         UpdateCoinText();
+        UpdateScoreText();
     }
 
     private void CheckGameEnd()
@@ -86,6 +89,10 @@ public class PauseMenuController : MonoBehaviour
     {
         coinText.text = "" + currentCoins;
         coinText1.text = "" + currentCoins;
+    }
+    private void UpdateScoreText()
+    {
+        scoreText.text = "" + currentScore;
     }
     // Ham thanh toan xe
     public bool SpeedCar(int price)

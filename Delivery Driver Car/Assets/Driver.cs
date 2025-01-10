@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +9,18 @@ public class Driver : MonoBehaviour
 	[SerializeField] float moveSpeed = 20f;
 	[SerializeField] float slowSpeed = 15f;
 	[SerializeField] float boostSpeed = 30f;
+    private SpriteRenderer spriteRenderer; // Thêm tham chiếu đến SpriteRenderer
 
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    void Start()
 	{
-		//transform.Rotate(0,0,45);
-	}
+        //transform.Rotate(0,0,45);
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer không tìm thấy trên object xe!");
+        }
+    }
 
 	// Update is called once per frame
 	void Update()

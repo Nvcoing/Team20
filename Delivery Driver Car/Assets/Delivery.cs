@@ -45,7 +45,7 @@ public class Delivery : MonoBehaviour
 
             if (pauseMenuController != null)
             {
-                pauseMenuController.AddCoins(50); // Cộng 50 coin khi giao hàng thành công
+                pauseMenuController.AddCoins(50,10); // Cộng 50 coin khi giao hàng thành công
             }
 
             currentCustomer = null;
