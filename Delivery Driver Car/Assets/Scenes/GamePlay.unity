@@ -26621,7 +26621,7 @@ MonoBehaviour:
   coinText: {fileID: 838570380}
   coinText1: {fileID: 1702913381}
   scoreText: {fileID: 1863012741}
-  currentCoins: 0
+  currentCoins: 1000
   currentScore: 0
   winConditionCoins: 1000
 --- !u!114 &1949143663
