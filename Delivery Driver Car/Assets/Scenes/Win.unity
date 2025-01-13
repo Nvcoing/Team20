@@ -697,6 +697,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900f53a468238ce46a0c035c2ab55699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicBtnStart: {fileID: 0}
+  musicBackground: {fileID: 8300000, guid: 955950585fd6ce34296318a70e71c115, type: 3}
 --- !u!1 &1184814786
 GameObject:
   m_ObjectHideFlags: 0

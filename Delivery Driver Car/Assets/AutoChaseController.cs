@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class PolicePatrolController : MonoBehaviour
 {
+    public AudioSource musicAudioSfx;
+    public AudioClip musicSiren;
     [Header("Movement Settings")]
     [SerializeField] private float patrolSpeed = 8f;
     [SerializeField] private float chaseSpeed = 12f;
@@ -27,6 +29,8 @@ public class PolicePatrolController : MonoBehaviour
         playerTarget = GameObject.FindGameObjectWithTag("Player")?.transform;
         roadObjects = GameObject.FindGameObjectsWithTag("Road");
         FindNewTargetPoint();
+        musicAudioSfx.clip = musicSiren;
+        musicAudioSfx.loop = true;
     }
 
     private void FixedUpdate()
@@ -37,10 +41,15 @@ public class PolicePatrolController : MonoBehaviour
 
         if (isChasing)
         {
+            if (!musicAudioSfx.isPlaying)
+            {
+                musicAudioSfx.Play();
+            }
             ChasePlayer();
         }
         else
         {
+            musicAudioSfx.Stop();
             PatrolRoads();
         }
     }

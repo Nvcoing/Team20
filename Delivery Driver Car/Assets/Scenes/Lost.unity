@@ -686,7 +686,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 211.46776
+  orthographic size: 194.3716
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1153,6 +1153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900f53a468238ce46a0c035c2ab55699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicBtnStart: {fileID: 8300000, guid: be55ad0a078ba1c43b606fa333de0d83, type: 3}
+  musicBackground: {fileID: 8300000, guid: d7817a73b22086449ba1276448ff6a85, type: 3}
 --- !u!114 &1876313423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1284,8 +1286,8 @@ Transform:
   m_GameObject: {fileID: 2046319348}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 377.214, y: 211.3358, z: 0}
-  m_LocalScale: {x: 39.149036, y: 39.788887, z: 1}
+  m_LocalPosition: {x: 378.5746, y: 212.2526, z: 0}
+  m_LocalScale: {x: 36.30338, y: 36.262577, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
