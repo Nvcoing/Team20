@@ -47,9 +47,9 @@ public class CarInfor : MonoBehaviour
                 {
                     playerSprite.sprite = carSprite;
                     // Set hệ số điểm dựa vào giá xe
-                    if (price <= 100) currentScoreMultiplier = 2;
-                    else if (price <= 300) currentScoreMultiplier = 3;
-                    else currentScoreMultiplier = 5;
+                    if (price <= 100) currentScoreMultiplier = 5;
+                    else if (price <= 300) currentScoreMultiplier = 10;
+                    else currentScoreMultiplier = 50;
                 }
             }
         }
