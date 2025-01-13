@@ -11682,8 +11682,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 778579994}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 564.45746, y: 94.37082, z: -1.6310283}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11693,7 +11693,7 @@ Transform:
   - {fileID: 770902203}
   - {fileID: 1791756542}
   - {fileID: 449817181}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2103607594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &790630245
 GameObject:
@@ -28120,7 +28120,7 @@ MonoBehaviour:
   coinText: {fileID: 838570380}
   coinText1: {fileID: 1702913381}
   scoreText: {fileID: 1863012741}
-  currentCoins: 0
+  currentCoins: 50
   currentScore: 0
   winConditionCoins: 1000
 --- !u!114 &1949143663
@@ -30795,6 +30795,7 @@ Transform:
   - {fileID: 1723620588}
   - {fileID: 279237990}
   - {fileID: 1280355324}
+  - {fileID: 778579995}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2114232524
@@ -31515,4 +31516,3 @@ SceneRoots:
   - {fileID: 692323570}
   - {fileID: 296974218}
   - {fileID: 1585455642}
-  - {fileID: 778579995}

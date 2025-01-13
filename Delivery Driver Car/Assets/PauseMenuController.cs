@@ -67,10 +67,20 @@ public class PauseMenuController : MonoBehaviour
 
     public void AddCoins(int amount,int score)
     {
-        currentCoins += amount;
-        currentScore += score;
-        UpdateCoinText();
-        UpdateScoreText();
+        // Kiểm tra nếu trừ coin sẽ không làm coin âm
+        if (currentCoins + amount >= 0)
+        {
+            currentCoins += amount;
+            currentScore += score;
+            UpdateCoinText();
+            UpdateScoreText();
+        }
+        else
+        {
+            // Nếu số coin sẽ bị âm, set về 0
+            currentCoins = 0;
+            UpdateCoinText();
+        }
     }
 
     private void CheckGameEnd()

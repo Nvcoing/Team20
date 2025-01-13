@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class Driver : MonoBehaviour
 {
-    // Variables
     [SerializeField] float steerSpeed = 300f;
     [SerializeField] float moveSpeed = 20f;
     [SerializeField] float slowSpeed = 15f;
     [SerializeField] float boostSpeed = 30f;
     private SpriteRenderer spriteRenderer;
 
-    private float normalSpeed; // Lưu trữ tốc độ bình thường
-    private Coroutine speedResetCoroutine; // Để quản lý coroutine phục hồi tốc độ
+    private float normalSpeed;
+    private Coroutine speedResetCoroutine;
+    private PauseMenuController pauseMenuController;
 
-    // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -22,10 +21,15 @@ public class Driver : MonoBehaviour
         {
             Debug.LogError("SpriteRenderer không tìm thấy trên object xe!");
         }
-        normalSpeed = moveSpeed; // Lưu tốc độ ban đầu
+        normalSpeed = moveSpeed;
+
+        pauseMenuController = FindObjectOfType<PauseMenuController>();
+        if (pauseMenuController == null)
+        {
+            Debug.LogError("PauseMenuController không tìm thấy trong scene!");
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         float steerAmount = Input.GetAxis("Horizontal") * steerSpeed * Time.deltaTime;
@@ -39,13 +43,21 @@ public class Driver : MonoBehaviour
         Debug.Log("Lowering the Speed");
         moveSpeed = slowSpeed;
 
-        // Hủy coroutine cũ nếu đang chạy
+        // Kiểm tra va chạm với cảnh sát
+        if (other.gameObject.GetComponent<PolicePatrolController>() != null)
+        {
+            if (pauseMenuController != null && pauseMenuController.currentCoins > 0)
+            {
+                // Trừ 1 coin khi va chạm với cảnh sát
+                pauseMenuController.AddCoins(-1, 0);
+                Debug.Log("Bị trừ 1 coin do va chạm với cảnh sát!");
+            }
+        }
+
         if (speedResetCoroutine != null)
         {
             StopCoroutine(speedResetCoroutine);
         }
-
-        // Bắt đầu coroutine mới
         speedResetCoroutine = StartCoroutine(ResetSpeedAfterDelay());
     }
 
@@ -56,7 +68,6 @@ public class Driver : MonoBehaviour
             Debug.Log("BOOST! Speed up incoming!");
             moveSpeed = boostSpeed;
 
-            // Hủy coroutine phục hồi tốc độ nếu đang chạy
             if (speedResetCoroutine != null)
             {
                 StopCoroutine(speedResetCoroutine);
@@ -66,8 +77,8 @@ public class Driver : MonoBehaviour
 
     IEnumerator ResetSpeedAfterDelay()
     {
-        yield return new WaitForSeconds(5f); // Đợi 5 giây
-        moveSpeed = normalSpeed; // Phục hồi về tốc độ bình thường
+        yield return new WaitForSeconds(5f);
+        moveSpeed = normalSpeed;
         Debug.Log("Speed restored to normal");
     }
 }
