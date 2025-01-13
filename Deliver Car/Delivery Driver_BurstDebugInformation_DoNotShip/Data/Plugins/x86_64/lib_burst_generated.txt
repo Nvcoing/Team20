@@ -10,7 +10,6 @@ Library: E:\code\Code unity\Team20\Delivery Driver Car\Temp\BurstOutput\Data\Plu
 --linker-options=PdbAltPath="Delivery Driver_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=E:\code\Code unity\Team20\Delivery Driver Car\Temp\Burst
---debug=LineOnly
 --key-folder=D:/Unity/Hub/Editor/6000.0.26f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
 --decode-folder=E:\code\Code unity\Team20\Delivery Driver Car\Library\Burst
 --output=E:\code\Code unity\Team20\Delivery Driver Car\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
@@ -71,7 +70,6 @@ Library: E:\code\Code unity\Team20\Delivery Driver Car\Temp\BurstOutput\Data\Plu
 --linker-options=PdbAltPath="Delivery Driver_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=E:\code\Code unity\Team20\Delivery Driver Car\Temp\Burst
---debug=LineOnly
 --key-folder=D:/Unity/Hub/Editor/6000.0.26f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
 --decode-folder=E:\code\Code unity\Team20\Delivery Driver Car\Library\Burst
 --output=E:\code\Code unity\Team20\Delivery Driver Car\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated

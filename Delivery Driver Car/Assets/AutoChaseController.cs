@@ -1,143 +1,192 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
-public class SmartEnemyController : MonoBehaviour
+public class PolicePatrolController : MonoBehaviour
 {
-    [Header("Target Settings")]
-    [SerializeField] private Transform playerTarget;
-    [SerializeField] private float detectionRange = 15f;
-
     [Header("Movement Settings")]
-    [SerializeField] private float normalSpeed = 8f;
-    [SerializeField] private float ramSpeed = 12f;
-    [SerializeField] private float rotateSpeed = 250f;
-    [SerializeField] private float ramDistance = 5f;
+    [SerializeField] private float patrolSpeed = 8f;
+    [SerializeField] private float chaseSpeed = 12f;
+    [SerializeField] private float rotateSpeed = 180f;
 
-    [Header("Obstacle Detection")]
-    [SerializeField] private float sensorLength = 3f;
-    [SerializeField] private float frontSensorOffset = 0.5f;
-    [SerializeField] private float sideSensorAngle = 45f;
-    [SerializeField] private LayerMask obstacleLayer; // Layer cho chướng ngại vật
+    [Header("Detection Settings")]
+    [SerializeField] private float detectionRange = 15f;
+    [SerializeField] private float targetPointRadius = 0.5f;
 
     private Rigidbody2D rb;
-    private bool isCharging = false;
-    private bool isAvoidingObstacle = false;
-    private float avoidanceDirection = 0f;
+    private Transform playerTarget;
+    private Vector2 currentTargetPoint;
+    private bool isChasing;
+    private bool hasTarget;
+    private List<Vector2> visitedPoints = new List<Vector2>();
+    private GameObject[] roadObjects;
+    private int maxVisitedPoints = 10;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (playerTarget == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                playerTarget = player.transform;
-        }
+        playerTarget = GameObject.FindGameObjectWithTag("Player")?.transform;
+        roadObjects = GameObject.FindGameObjectsWithTag("Road");
+        FindNewTargetPoint();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (playerTarget == null) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
+        CheckPlayerDetection();
 
-        if (distanceToPlayer <= detectionRange)
+        if (isChasing)
         {
-            CheckObstacles();
-            ChaseAndAvoid();
-        }
-    }
-
-    void CheckObstacles()
-    {
-        isAvoidingObstacle = false;
-        Vector2 frontStartPos = (Vector2)transform.position + ((Vector2)transform.up * frontSensorOffset);
-
-        // Tia phía trước
-        RaycastHit2D frontHit = Physics2D.Raycast(frontStartPos, transform.up, sensorLength, obstacleLayer);
-
-        // Tia bên trái
-        Vector2 leftDirection = Quaternion.Euler(0, 0, sideSensorAngle) * transform.up;
-        RaycastHit2D leftHit = Physics2D.Raycast(frontStartPos, leftDirection, sensorLength, obstacleLayer);
-
-        // Tia bên phải
-        Vector2 rightDirection = Quaternion.Euler(0, 0, -sideSensorAngle) * transform.up;
-        RaycastHit2D rightHit = Physics2D.Raycast(frontStartPos, rightDirection, sensorLength, obstacleLayer);
-
-        // Vẽ các tia raycast để debug
-        Debug.DrawRay(frontStartPos, transform.up * sensorLength, Color.green);
-        Debug.DrawRay(frontStartPos, leftDirection * sensorLength, Color.yellow);
-        Debug.DrawRay(frontStartPos, rightDirection * sensorLength, Color.yellow);
-
-        if (frontHit.collider != null || leftHit.collider != null || rightHit.collider != null)
-        {
-            isAvoidingObstacle = true;
-
-            if (frontHit.collider != null)
-            {
-                if (leftHit.collider == null)
-                    avoidanceDirection = 1f;
-                else if (rightHit.collider == null)
-                    avoidanceDirection = -1f;
-                else
-                    avoidanceDirection = (Random.value > 0.5f) ? 1f : -1f;
-            }
-            else if (leftHit.collider != null)
-                avoidanceDirection = -0.5f;
-            else if (rightHit.collider != null)
-                avoidanceDirection = 0.5f;
-        }
-    }
-
-    void ChaseAndAvoid()
-    {
-        Vector2 directionToPlayer = (playerTarget.position - transform.position).normalized;
-        float angleToPlayer = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg - 90f;
-
-        if (isAvoidingObstacle)
-        {
-            // Xoay để tránh chướng ngại vật
-            transform.Rotate(0, 0, avoidanceDirection * rotateSpeed * Time.fixedDeltaTime);
-
-            // Di chuyển với tốc độ thường
-            Vector2 movement = (Vector2)transform.up * normalSpeed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + movement);
+            ChasePlayer();
         }
         else
         {
-            // Xoay về phía người chơi
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                Quaternion.Euler(0, 0, angleToPlayer),
-                rotateSpeed * Time.fixedDeltaTime
-            );
-
-            // Kiểm tra góc hướng về người chơi
-            float facingAngle = Vector2.Angle(transform.up, directionToPlayer);
-
-            if (facingAngle < 30f)
-            {
-                float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
-                isCharging = distanceToPlayer <= ramDistance;
-
-                // Di chuyển với tốc độ tương ứng
-                float currentSpeed = isCharging ? ramSpeed : normalSpeed;
-                Vector2 movement = (Vector2)transform.up * currentSpeed * Time.fixedDeltaTime;
-                rb.MovePosition(rb.position + movement);
-            }
+            PatrolRoads();
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void FindNewTargetPoint()
     {
-        isCharging = false;
+        if (roadObjects.Length == 0) return;
+
+        float minDistance = float.MaxValue;
+        Vector2 bestPoint = rb.position;
+        bool foundValidPoint = false;
+
+        // Tìm object Road gần nhất chưa được thăm
+        foreach (GameObject road in roadObjects)
+        {
+            if (road == null) continue;
+
+            // Lấy bounds của road object
+            Renderer roadRenderer = road.GetComponent<Renderer>();
+            if (roadRenderer == null) continue;
+
+            // Tạo một số điểm ngẫu nhiên trong bounds của road
+            for (int i = 0; i < 5; i++)
+            {
+                Vector2 randomPoint = GetRandomPointOnRoad(roadRenderer.bounds);
+
+                // Kiểm tra xem điểm này có quá gần điểm đã thăm không
+                bool isTooClose = false;
+                foreach (Vector2 visitedPoint in visitedPoints)
+                {
+                    if (Vector2.Distance(randomPoint, visitedPoint) < 2f)
+                    {
+                        isTooClose = true;
+                        break;
+                    }
+                }
+
+                if (!isTooClose)
+                {
+                    float distance = Vector2.Distance(rb.position, randomPoint);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        bestPoint = randomPoint;
+                        foundValidPoint = true;
+                    }
+                }
+            }
+        }
+
+        if (foundValidPoint)
+        {
+            currentTargetPoint = bestPoint;
+            hasTarget = true;
+
+            // Thêm điểm vào danh sách đã thăm
+            visitedPoints.Add(currentTargetPoint);
+            if (visitedPoints.Count > maxVisitedPoints)
+            {
+                visitedPoints.RemoveAt(0);
+            }
+        }
+        else
+        {
+            // Nếu không tìm được điểm mới, xóa lịch sử để bắt đầu lại
+            visitedPoints.Clear();
+            FindNewTargetPoint();
+        }
     }
 
-    void OnDrawGizmosSelected()
+    private Vector2 GetRandomPointOnRoad(Bounds bounds)
     {
-        Gizmos.color = Color.red;
+        return new Vector2(
+            Random.Range(bounds.min.x, bounds.max.x),
+            Random.Range(bounds.min.y, bounds.max.y)
+        );
+    }
+
+    private void PatrolRoads()
+    {
+        if (!hasTarget || Vector2.Distance(rb.position, currentTargetPoint) < targetPointRadius)
+        {
+            FindNewTargetPoint();
+        }
+
+        if (hasTarget)
+        {
+            MoveToTarget(currentTargetPoint);
+        }
+    }
+
+    private void CheckPlayerDetection()
+    {
+        float distanceToPlayer = Vector2.Distance(rb.position, playerTarget.position);
+        isChasing = distanceToPlayer <= detectionRange;
+    }
+
+    private void ChasePlayer()
+    {
+        if (playerTarget == null) return;
+        MoveToTarget(playerTarget.position);
+    }
+
+    private void MoveToTarget(Vector2 target)
+    {
+        // Tính hướng di chuyển
+        Vector2 direction = (target - rb.position).normalized;
+
+        // Tính góc cần xoay
+        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        float angleDifference = Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle);
+        float rotationAmount = Mathf.Clamp(angleDifference, -rotateSpeed * Time.fixedDeltaTime, rotateSpeed * Time.fixedDeltaTime);
+
+        // Áp dụng xoay
+        transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.z + rotationAmount);
+
+        // Di chuyển
+        float currentSpeed = isChasing ? chaseSpeed : patrolSpeed;
+        Vector2 movement = (Vector2)transform.up * currentSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + movement);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Tìm điểm mới khi va chạm
+        hasTarget = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Vẽ vùng phát hiện player
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, ramDistance);
+        // Vẽ điểm đích hiện tại
+        if (hasTarget)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(currentTargetPoint, targetPointRadius);
+        }
+
+        // Vẽ các điểm đã thăm
+        Gizmos.color = Color.blue;
+        foreach (Vector2 point in visitedPoints)
+        {
+            Gizmos.DrawWireSphere(point, 0.3f);
+        }
     }
 }
