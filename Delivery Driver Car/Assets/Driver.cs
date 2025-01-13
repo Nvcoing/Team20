@@ -32,8 +32,20 @@ public class Driver : MonoBehaviour
 
     void Update()
     {
-        float steerAmount = Input.GetAxis("Horizontal") * steerSpeed * Time.deltaTime;
         float moveAmount = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+
+        // Chỉ cho phép rẽ khi xe đang di chuyển
+        float steerAmount = 0f;
+        if (Mathf.Abs(moveAmount) > 0.01f)  // Kiểm tra xe có đang di chuyển không
+        {
+            steerAmount = Input.GetAxis("Horizontal") * steerSpeed * Time.deltaTime;
+            // Đảo hướng rẽ khi lùi
+            if (moveAmount < 0)
+            {
+                steerAmount = -steerAmount;
+            }
+        }
+
         transform.Rotate(0, 0, -steerAmount);
         transform.Translate(0, moveAmount, 0);
     }
